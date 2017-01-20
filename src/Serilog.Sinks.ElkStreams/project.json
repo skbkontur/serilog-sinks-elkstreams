@@ -1,0 +1,34 @@
+{
+  "version": "1.0.0-*",
+    "description": "Serilog sink for ElkStreams",
+  "authors": [ "Yury Pliner" ],
+  "packOptions": {
+    "tags": [ "serilog", "logging", "elkstreams", "error" ],
+    "projectUrl": "http://serilog.net",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0"
+  },
+  "dependencies": {
+    "Serilog": "2.3.0",
+    "Serilog.Sinks.PeriodicBatching": "2.1.0"
+  },
+  "frameworks": {
+    "net4.5": {
+      "buildOptions": {
+        "define": [  ]
+      },
+      "frameworkAssemblies": {
+        "System.Net.Http": ""
+      },
+      "dependencies": {
+      }
+    },
+    "netstandard1.5": {
+      "buildOptions": {
+        "define": [  ]
+      },
+      "dependencies": {
+        "System.Net.Http": "4.1.0"
+      }
+    }
+  }
+}
