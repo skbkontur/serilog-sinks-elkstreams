@@ -4,7 +4,7 @@
   "authors": [ "Yury Pliner" ],
   "packOptions": {
     "tags": [ "serilog", "logging", "elkstreams", "error" ],
-    "projectUrl": "http://serilog.net",
+    "projectUrl": "https://github.com/skbkontur/serilog-sinks-elkstreams.git",
     "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0"
   },
   "dependencies": {
