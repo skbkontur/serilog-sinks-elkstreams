@@ -11,6 +11,9 @@ namespace Serilog.Sinks.ElkStreams
     /// </summary>
     public class ElkStreamsJsonFormatter : ITextFormatter
     {
+        const int DefaultMaxMessageLength = 32 * 1024;
+        const int DefaultMaxExceptionLength = 32 * 1024;
+
         readonly JsonValueFormatter _valueFormatter;
 
         /// <summary>
@@ -49,13 +52,13 @@ namespace Serilog.Sinks.ElkStreams
             output.Write("{");
 
             output.WriteProperty("@timestamp", logEvent.Timestamp.ToUniversalTime().ToString("O"), false);
-            output.WriteProperty("MessageTemplate", logEvent.MessageTemplate.Text);
-            output.WriteProperty("Message", logEvent.MessageTemplate.Render(logEvent.Properties));
+            output.WriteProperty("MessageTemplate", logEvent.MessageTemplate.Text.Truncate(DefaultMaxMessageLength));
+            output.WriteProperty("Message", logEvent.MessageTemplate.Render(logEvent.Properties).Truncate(DefaultMaxMessageLength));
             output.WriteProperty("Level", logEvent.Level.ToString());
 
             if (logEvent.Exception != null)
             {
-                output.WriteProperty("Exception", logEvent.Exception.ToString());
+                output.WriteProperty("Exception", logEvent.Exception.ToString().Truncate(DefaultMaxExceptionLength));
             }
 
             foreach (var property in logEvent.Properties)
