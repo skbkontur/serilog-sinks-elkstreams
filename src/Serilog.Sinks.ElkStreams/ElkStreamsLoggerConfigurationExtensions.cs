@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Net.Http;
 using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Sinks.ElkStreams;
@@ -31,7 +30,6 @@ namespace Serilog
         /// <param name="loggerConfiguration">The logger configuration.</param>
         /// <param name="indexTemplate">The index name formatter. A string.Format using the DateTimeOffset of the event is run over this string.</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-        /// <param name="messageHandler">Used to construct the HttpClient that will send the log messages to ElkStreams.</param>
         /// <param name="batchPostingLimit">The maximum number of events to post in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="serverUrl">The base URL of the ElkStreams server that log events will be written to.</param>
@@ -46,7 +44,6 @@ namespace Serilog
             string apiKey = null,
             string indexTemplate = null,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            HttpMessageHandler messageHandler = null,
             int batchPostingLimit = ElkStreamsSink.DefaultBatchPostingLimit,
             TimeSpan? period = null,
             int queueSizeLimit = ElkStreamsSink.DefaultQueueSizeLimit)
@@ -59,7 +56,6 @@ namespace Serilog
                 serverUrl,
                 apiKey,
                 indexTemplate,
-                messageHandler,
                 batchPostingLimit,
                 defaultedPeriod,
                 queueSizeLimit);

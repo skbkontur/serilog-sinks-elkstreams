@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0-*",
-    "description": "Serilog sink for ElkStreams",
+  "version": "1.1.0-*",
+  "description": "Serilog sink for ElkStreams",
   "authors": [ "Yury Pliner" ],
   "packOptions": {
     "tags": [ "serilog", "logging", "elkstreams", "error" ],
@@ -8,7 +8,7 @@
     "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0"
   },
   "dependencies": {
-    "Serilog": "2.3.0",
+    "Serilog": "2.4.0",
     "Serilog.Sinks.PeriodicBatching": "2.1.0"
   },
   "frameworks": {
