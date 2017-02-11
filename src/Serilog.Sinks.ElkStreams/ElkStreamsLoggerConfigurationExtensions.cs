@@ -41,14 +41,17 @@ namespace Serilog
         public static LoggerConfiguration ElkStreams(
             this LoggerSinkConfiguration loggerConfiguration,
             string serverUrl,
-            string apiKey = null,
-            string indexTemplate = null,
+            string apiKey,
+            string indexTemplate,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             int batchPostingLimit = ElkStreamsSink.DefaultBatchPostingLimit,
             TimeSpan? period = null,
             int queueSizeLimit = ElkStreamsSink.DefaultQueueSizeLimit)
         {
             if (loggerConfiguration == null) throw new ArgumentNullException(nameof(loggerConfiguration));
+            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
+            if (apiKey == null) throw new ArgumentNullException(nameof(apiKey));
+            if (indexTemplate == null) throw new ArgumentNullException(nameof(indexTemplate));
 
             var defaultedPeriod = period ?? ElkStreamsSink.DefaultPeriod;
 
