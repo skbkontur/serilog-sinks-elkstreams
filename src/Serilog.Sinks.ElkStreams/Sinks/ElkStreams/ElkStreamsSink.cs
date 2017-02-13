@@ -31,7 +31,7 @@ namespace Serilog.Sinks.ElkStreams
     public class ElkStreamsSink : PeriodicBatchingSink
     {
         public const int DefaultBatchPostingLimit = 512;
-        public const int DefaultQueueSizeLimit = 2 * 1024;
+        public const int DefaultQueueSizeLimit = 65536;
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(1);
 
         readonly HttpClient _httpClient;
