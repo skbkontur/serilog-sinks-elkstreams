@@ -53,7 +53,6 @@ namespace Serilog.Sinks.ElkStreams
 
             output.WriteProperty("@timestamp", logEvent.Timestamp.ToUniversalTime().ToString("O"), false);
             output.WriteProperty("MessageTemplate", logEvent.MessageTemplate.Text.Truncate(DefaultMaxMessageLength));
-            output.WriteProperty("Message", logEvent.MessageTemplate.Render(logEvent.Properties).Truncate(DefaultMaxMessageLength));
             output.WriteProperty("Level", logEvent.Level.ToString());
 
             if (logEvent.Exception != null)
