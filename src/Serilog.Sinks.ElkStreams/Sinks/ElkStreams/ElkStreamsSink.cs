@@ -78,12 +78,12 @@ namespace Serilog.Sinks.ElkStreams
 
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             if (disposing)
             {
                 _httpClient.Dispose();
             }
-
-            base.Dispose(disposing);
         }
 
         HttpRequestMessage BuildRequest(IEnumerable<LogEvent> logEvents)
