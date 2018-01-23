@@ -44,6 +44,7 @@ namespace Serilog.Sinks.ElkStreams
         /// <param name="serverUrl">The base URL of the ElkStreams server that log events will be written to.</param>
         /// <param name="apiKey">A ElkStreams <i>API key</i> that authenticates the client to the ElkStreams server.</param>
         /// <param name="indexTemplate">The index name formatter. A string.Format using the DateTimeOffset of the event is run over this string.</param>
+        /// <param name="renderMessage">Whether to render the message in addition to template</param>
         /// <param name="batchSizeLimit">The maximum number of events to post in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="queueSizeLimit">Maximum number of events in the queue.</param>
@@ -51,6 +52,7 @@ namespace Serilog.Sinks.ElkStreams
             string serverUrl,
             string apiKey,
             string indexTemplate,
+            bool renderMessage,
             int batchSizeLimit,
             TimeSpan period,
             int queueSizeLimit)
@@ -60,7 +62,7 @@ namespace Serilog.Sinks.ElkStreams
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(ElkStreamsApi.NormalizeServerBaseAddress(serverUrl));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ElkStreamsApi.AuthorizationScheme, apiKey);
-            _formatter = new ElkStreamsJsonFormatter();
+            _formatter = new ElkStreamsJsonFormatter(renderMessage: renderMessage);
         }
 
         /// <summary>

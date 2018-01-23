@@ -1,7 +1,6 @@
-using Serilog.Sinks.ElkStreams;
 using Xunit;
 
-namespace log4net.ElasticSearch.Tests
+namespace Serilog.Sinks.ElkStreams.Tests
 {
     public class StringExtentionsTests
     {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Serilog sink for ElkStreams</Description>
-    <VersionPrefix>1.2.4</VersionPrefix>
+    <VersionPrefix>1.2.5</VersionPrefix>
     <Authors>Yury Pliner</Authors>
     <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
     <AssemblyName>Serilog.Sinks.ElkStreams</AssemblyName>
@@ -11,6 +11,7 @@
     <PackageProjectUrl>https://github.com/skbkontur/serilog-sinks-elkstreams.git</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <RootNamespace>Serilog</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

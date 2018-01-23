@@ -29,6 +29,7 @@ namespace Serilog
         /// </summary>
         /// <param name="loggerConfiguration">The logger configuration.</param>
         /// <param name="indexTemplate">The index name formatter. A string.Format using the DateTimeOffset of the event is run over this string.</param>
+        /// <param name="renderMessage">Whether to render the message in addition to template</param>
         /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
         /// <param name="batchPostingLimit">The maximum number of events to post in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
@@ -43,6 +44,7 @@ namespace Serilog
             string serverUrl,
             string apiKey,
             string indexTemplate,
+            bool renderMessage = false,
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             int batchPostingLimit = ElkStreamsSink.DefaultBatchPostingLimit,
             TimeSpan? period = null,
@@ -59,10 +61,10 @@ namespace Serilog
                 serverUrl,
                 apiKey,
                 indexTemplate,
+                renderMessage,
                 batchPostingLimit,
                 defaultedPeriod,
                 queueSizeLimit);
-
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
     }
