@@ -15,6 +15,7 @@ namespace Serilog.Sinks.ElkStreams
         const int DefaultMaxExceptionLength = 32 * 1024;
 
         readonly bool _renderMessage;
+        readonly bool _removeGuidsFromExceptions;
         readonly JsonValueFormatter _valueFormatter;
 
         /// <summary>
@@ -23,10 +24,12 @@ namespace Serilog.Sinks.ElkStreams
         /// </summary>
         /// <param name="renderMessage">Whether to render the message in addition to template</param>
         /// <param name="valueFormatter">A value formatter, or null.</param>
-        public ElkStreamsJsonFormatter(JsonValueFormatter valueFormatter = null, bool renderMessage = false)
+        /// <param name="removeGuidsFromExceptions">Whether to remove GUIDs from exception's message and stacktrace</param>
+        public ElkStreamsJsonFormatter(JsonValueFormatter valueFormatter = null, bool renderMessage = false, bool removeGuidsFromExceptions = false)
         {
             _valueFormatter = valueFormatter ?? new JsonValueFormatter("$type");
             _renderMessage = renderMessage;
+            _removeGuidsFromExceptions = removeGuidsFromExceptions;
         }
 
         /// <summary>
@@ -36,7 +39,7 @@ namespace Serilog.Sinks.ElkStreams
         /// <param name="output">The output.</param>
         public void Format(LogEvent logEvent, TextWriter output)
         {
-            FormatEvent(logEvent, output, _valueFormatter, _renderMessage);
+            FormatEvent(logEvent, output, _valueFormatter, _renderMessage, _removeGuidsFromExceptions);
             output.WriteLine();
         }
 
@@ -47,7 +50,8 @@ namespace Serilog.Sinks.ElkStreams
         /// <param name="output">The output.</param>
         /// <param name="valueFormatter">A value formatter for <see cref="LogEventPropertyValue"/>s on the event.</param>
         /// <param name="renderMessage"></param>
-        public static void FormatEvent(LogEvent logEvent, TextWriter output, JsonValueFormatter valueFormatter, bool renderMessage = false)
+        /// <param name="removeGuidsFromExceptions"></param>
+        public static void FormatEvent(LogEvent logEvent, TextWriter output, JsonValueFormatter valueFormatter, bool renderMessage = false, bool removeGuidsFromExceptions = false)
         {
             if (logEvent == null) throw new ArgumentNullException(nameof(logEvent));
             if (output == null) throw new ArgumentNullException(nameof(output));
@@ -67,7 +71,10 @@ namespace Serilog.Sinks.ElkStreams
 
             if (logEvent.Exception != null)
             {
-                output.WriteProperty("Exception", logEvent.Exception.ToString().Truncate(DefaultMaxExceptionLength));
+                var exceptionString = removeGuidsFromExceptions
+                                          ? logEvent.Exception.ToString().RemoveGuids()
+                                          : logEvent.Exception.ToString();
+                output.WriteProperty("Exception", exceptionString.Truncate(DefaultMaxExceptionLength));
             }
 
             foreach (var property in logEvent.Properties)

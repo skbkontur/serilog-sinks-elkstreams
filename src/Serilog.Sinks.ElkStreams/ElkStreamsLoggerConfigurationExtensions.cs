@@ -39,6 +39,7 @@ namespace Serilog
         /// ElkStreams. Beyond this limit, events will be dropped.</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
+        /// <param name="removeGuidsFromExceptions">Whether to remove GUIDs from exception's message and stacktrace</param>
         public static LoggerConfiguration ElkStreams(
             this LoggerSinkConfiguration loggerConfiguration,
             string serverUrl,
@@ -48,7 +49,8 @@ namespace Serilog
             LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
             int batchPostingLimit = ElkStreamsSink.DefaultBatchPostingLimit,
             TimeSpan? period = null,
-            int queueSizeLimit = ElkStreamsSink.DefaultQueueSizeLimit)
+            int queueSizeLimit = ElkStreamsSink.DefaultQueueSizeLimit,
+            bool removeGuidsFromExceptions = false)
         {
             if (loggerConfiguration == null) throw new ArgumentNullException(nameof(loggerConfiguration));
             if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
@@ -64,7 +66,8 @@ namespace Serilog
                 renderMessage,
                 batchPostingLimit,
                 defaultedPeriod,
-                queueSizeLimit);
+                queueSizeLimit,
+                removeGuidsFromExceptions);
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
     }
