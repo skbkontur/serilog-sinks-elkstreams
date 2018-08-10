@@ -48,6 +48,7 @@ namespace Serilog.Sinks.ElkStreams
         /// <param name="batchSizeLimit">The maximum number of events to post in a single batch.</param>
         /// <param name="period">The time to wait between checking for event batches.</param>
         /// <param name="queueSizeLimit">Maximum number of events in the queue.</param>
+        /// <param name="removeGuidsFromExceptions">Whether to remove GUIDs from exception's message and stacktrace</param>
         public ElkStreamsSink(
             string serverUrl,
             string apiKey,
@@ -55,14 +56,15 @@ namespace Serilog.Sinks.ElkStreams
             bool renderMessage,
             int batchSizeLimit,
             TimeSpan period,
-            int queueSizeLimit)
+            int queueSizeLimit,
+            bool removeGuidsFromExceptions)
             : base(batchSizeLimit, period, queueSizeLimit)
         {
             _indexTemplate = indexTemplate;
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(ElkStreamsApi.NormalizeServerBaseAddress(serverUrl));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ElkStreamsApi.AuthorizationScheme, apiKey);
-            _formatter = new ElkStreamsJsonFormatter(renderMessage: renderMessage);
+            _formatter = new ElkStreamsJsonFormatter(renderMessage: renderMessage, removeGuidsFromExceptions: removeGuidsFromExceptions);
         }
 
         /// <summary>
