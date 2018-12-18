@@ -30,6 +30,7 @@ namespace Serilog.Sinks.ElkStreams
     /// </summary>
     public class ElkStreamsSink : PeriodicBatchingSink
     {
+        const int EventSize = 32 * 1024;
         public const int DefaultBatchPostingLimit = 512;
         public const int DefaultQueueSizeLimit = 65536;
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(1);
@@ -37,6 +38,8 @@ namespace Serilog.Sinks.ElkStreams
         readonly HttpClient _httpClient;
         readonly string _indexTemplate;
         readonly ElkStreamsJsonFormatter _formatter;
+        readonly MemoryStream _eventsStream;
+        readonly StreamWriter _eventsWriter;
 
         /// <summary>
         /// The sink that writes log events to the ElkStreams server.
@@ -63,6 +66,8 @@ namespace Serilog.Sinks.ElkStreams
             _httpClient.BaseAddress = new Uri(ElkStreamsApi.NormalizeServerBaseAddress(serverUrl));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ElkStreamsApi.AuthorizationScheme, apiKey);
             _formatter = new ElkStreamsJsonFormatter(renderMessage: renderMessage);
+            _eventsStream = new MemoryStream();
+            _eventsWriter = new StreamWriter(_eventsStream, Encoding.UTF8, EventSize);
         }
 
         /// <summary>
@@ -90,36 +95,39 @@ namespace Serilog.Sinks.ElkStreams
 
         HttpRequestMessage BuildRequest(IEnumerable<LogEvent> logEvents)
         {
-            var payload = new StringWriter();
-            var eventStringBuilder = new StringBuilder();
-            var eventPayload = new StringWriter(eventStringBuilder);
+            _eventsStream.Position = 0;
 
             foreach (var logEvent in logEvents)
             {
-                eventStringBuilder.Clear();
-
+                var position = _eventsStream.Position;
                 try
                 {
-                    _formatter.Format(logEvent, eventPayload);
+                    try
+                    {
+                        _formatter.Format(logEvent, _eventsWriter);
+                    }
+                    finally
+                    {
+                        _eventsWriter.Flush();
+                    }
                 }
                 catch (Exception exception)
                 {
-                    LogNonFormattableEvent(logEvent, exception);
-                    continue;
-                }
+                    _eventsStream.Position = position;
 
-                payload.Write(eventStringBuilder.ToString());
+                    LogNonFormattableEvent(logEvent, exception);
+                }
             }
 
-            return new HttpRequestMessage(HttpMethod.Post, GetUploadUrl())
+            return new HttpRequestMessage(HttpMethod.Post, GetUploadPath())
             {
-                Content = new StringContent(payload.ToString(), Encoding.UTF8, ElkStreamsApi.EventMimeType)
+                Content = new ByteArrayContent(_eventsStream.GetBuffer(), 0, (int)_eventsStream.Position)
             };
         }
 
-        Uri GetUploadUrl()
+        string GetUploadPath()
         {
-            return new Uri($"logs/{_indexTemplate}-{DateTime.Now:yyyy.MM.dd}", UriKind.Relative);
+            return $"logs/{_indexTemplate}-{DateTime.Now.ToString("yyyy.MM.dd")}";
         }
 
         static void LogNonFormattableEvent(LogEvent logEvent, Exception ex)

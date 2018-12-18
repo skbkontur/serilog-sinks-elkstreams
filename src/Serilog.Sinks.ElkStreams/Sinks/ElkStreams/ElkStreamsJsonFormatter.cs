@@ -63,7 +63,7 @@ namespace Serilog.Sinks.ElkStreams
                 output.WriteProperty("Message", logEvent.RenderMessage().Truncate(DefaultMaxMessageLength));
             }
 
-            output.WriteProperty("Level", logEvent.Level.ToString());
+            output.WriteProperty("Level", GetLevelMoniker(logEvent.Level));
 
             if (logEvent.Exception != null)
             {
@@ -76,6 +76,27 @@ namespace Serilog.Sinks.ElkStreams
             }
 
             output.Write("}");
+        }
+
+        static string GetLevelMoniker(LogEventLevel logEventLevel)
+        {
+            switch (logEventLevel)
+            {
+                case LogEventLevel.Verbose:
+                    return "Verbose";
+                case LogEventLevel.Debug:
+                    return "Debug";
+                case LogEventLevel.Information:
+                    return "Information";
+                case LogEventLevel.Warning:
+                    return "Warning";
+                case LogEventLevel.Error:
+                    return "Error";
+                case LogEventLevel.Fatal:
+                    return "Fatal";
+                default:
+                    return logEventLevel.ToString();
+            }
         }
     }
 }

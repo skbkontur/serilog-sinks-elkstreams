@@ -16,7 +16,7 @@ namespace Serilog.Sinks.ElkStreams
             var x = source.Length - length;
             var y = Pattern.Length - 6 + GetNumberOfDigits(x);
             var truncatedCount = x + y + (GetNumberOfDigits(x + y) > GetNumberOfDigits(x) ? 1 : 0);
-            return string.Format(Pattern, source.Substring(0, source.Length - truncatedCount), truncatedCount);
+            return string.Format(Pattern, source.Substring(0, source.Length - truncatedCount), truncatedCount.ToString());
         }
 
         static int GetNumberOfDigits(int i) => (int)Math.Floor(Math.Log10(i) + 1);

@@ -64,7 +64,8 @@ namespace Serilog
                 renderMessage,
                 batchPostingLimit,
                 defaultedPeriod,
-                queueSizeLimit);
+                queueSizeLimit
+            );
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
     }
