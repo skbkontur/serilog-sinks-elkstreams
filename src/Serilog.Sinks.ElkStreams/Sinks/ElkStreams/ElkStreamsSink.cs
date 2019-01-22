@@ -67,7 +67,7 @@ namespace Serilog.Sinks.ElkStreams
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(ElkStreamsApi.AuthorizationScheme, apiKey);
             _formatter = new ElkStreamsJsonFormatter(renderMessage: renderMessage);
             _eventsStream = new MemoryStream();
-            _eventsWriter = new StreamWriter(_eventsStream, Encoding.UTF8, EventSize);
+            _eventsWriter = new StreamWriter(_eventsStream, new UTF8Encoding(false, true), EventSize);
         }
 
         /// <summary>
