@@ -11,9 +11,9 @@ namespace Serilog.Sinks.ElkStreams.Tests
         [InlineData("12345678901234567890", "12[truncated 18]")]
         [InlineData("123456789012345678901234567890", "12[truncated 28]")]
 
-        public void TestTruncate(string initial, string expeñted)
+        public void TestTruncate(string initial, string expected)
         {
-            Assert.Equal(expeñted, initial.Truncate(16));
+            Assert.Equal(expected, initial.Truncate(16));
         }
     }
 }
