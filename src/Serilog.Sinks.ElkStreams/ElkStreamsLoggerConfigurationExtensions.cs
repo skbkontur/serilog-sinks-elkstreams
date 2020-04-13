@@ -36,7 +36,7 @@ namespace Serilog
         /// <param name="serverUrl">The base URL of the ElkStreams server that log events will be written to.</param>
         /// <param name="apiKey">A ElkStreams <i>API key</i> that authenticates the client to the ElkStreams server.</param>
         /// <param name="queueSizeLimit">The maximum number of events that will be held in-memory while waiting to ship them to
-        /// ElkStreams. Beyond this limit, events will be dropped.</param>
+        /// ElkStreams. Beyond this limit, events will be dropped. Value -1 means that there is no queue size limit.</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
         public static LoggerConfiguration ElkStreams(
@@ -57,15 +57,23 @@ namespace Serilog
 
             var defaultedPeriod = period ?? ElkStreamsSink.DefaultPeriod;
 
-            var sink = new ElkStreamsSink(
-                serverUrl,
-                apiKey,
-                indexTemplate,
-                renderMessage,
-                batchPostingLimit,
-                defaultedPeriod,
-                queueSizeLimit
-            );
+            var sink = queueSizeLimit == ElkStreamsSink.AbsenceQueueSizeLimit
+                ? new ElkStreamsSink(
+                    serverUrl,
+                    apiKey,
+                    indexTemplate,
+                    renderMessage,
+                    batchPostingLimit,
+                    defaultedPeriod
+                ) : new ElkStreamsSink(
+                    serverUrl,
+                    apiKey,
+                    indexTemplate,
+                    renderMessage,
+                    batchPostingLimit,
+                    defaultedPeriod,
+                    queueSizeLimit
+                );
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
     }
