@@ -68,46 +68,5 @@ namespace Serilog
             );
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
-
-        /// <summary>
-        /// Adds a sink that writes log events to the ElkStreams server.
-        /// </summary>
-        /// <param name="loggerConfiguration">The logger configuration.</param>
-        /// <param name="indexTemplate">The index name formatter. A string.Format using the DateTimeOffset of the event is run over this string.</param>
-        /// <param name="renderMessage">Whether to render the message in addition to template</param>
-        /// <param name="restrictedToMinimumLevel">The minimum log event level required in order to write an event to the sink.</param>
-        /// <param name="batchPostingLimit">The maximum number of events to post in a single batch.</param>
-        /// <param name="period">The time to wait between checking for event batches.</param>
-        /// <param name="serverUrl">The base URL of the ElkStreams server that log events will be written to.</param>
-        /// <param name="apiKey">A ElkStreams <i>API key</i> that authenticates the client to the ElkStreams server.</param>
-        /// <returns>Logger configuration, allowing configuration to continue.</returns>
-        /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
-        public static LoggerConfiguration ElkStreamsWithoutQueueLimit(
-            this LoggerSinkConfiguration loggerConfiguration,
-            string serverUrl,
-            string apiKey,
-            string indexTemplate,
-            bool renderMessage = false,
-            LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-            int batchPostingLimit = ElkStreamsSink.DefaultBatchPostingLimit,
-            TimeSpan? period = null)
-        {
-            if (loggerConfiguration == null) throw new ArgumentNullException(nameof(loggerConfiguration));
-            if (serverUrl == null) throw new ArgumentNullException(nameof(serverUrl));
-            if (apiKey == null) throw new ArgumentNullException(nameof(apiKey));
-            if (indexTemplate == null) throw new ArgumentNullException(nameof(indexTemplate));
-
-            var defaultedPeriod = period ?? ElkStreamsSink.DefaultPeriod;
-
-            var sink = new ElkStreamsSink(
-                serverUrl,
-                apiKey,
-                indexTemplate,
-                renderMessage,
-                batchPostingLimit,
-                defaultedPeriod
-            );
-            return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
-        }
     }
 }
