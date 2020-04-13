@@ -26,7 +26,6 @@ namespace Serilog
     {
         /// <summary>
         /// Adds a sink that writes log events to the ElkStreams server.
-        /// Value -1 of parameter queueSizeLimit means that there is no queue size limit.
         /// </summary>
         /// <param name="loggerConfiguration">The logger configuration.</param>
         /// <param name="indexTemplate">The index name formatter. A string.Format using the DateTimeOffset of the event is run over this string.</param>
@@ -37,7 +36,7 @@ namespace Serilog
         /// <param name="serverUrl">The base URL of the ElkStreams server that log events will be written to.</param>
         /// <param name="apiKey">A ElkStreams <i>API key</i> that authenticates the client to the ElkStreams server.</param>
         /// <param name="queueSizeLimit">The maximum number of events that will be held in-memory while waiting to ship them to
-        /// ElkStreams. Beyond this limit, events will be dropped.</param>
+        /// ElkStreams. Beyond this limit, events will be dropped. Value -1 means that there is no queue size limit.</param>
         /// <returns>Logger configuration, allowing configuration to continue.</returns>
         /// <exception cref="ArgumentNullException">A required parameter is null.</exception>
         public static LoggerConfiguration ElkStreams(
