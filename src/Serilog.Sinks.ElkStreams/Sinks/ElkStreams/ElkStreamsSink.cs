@@ -33,6 +33,7 @@ namespace Serilog.Sinks.ElkStreams
         const int EventSize = 32 * 1024;
         public const int DefaultBatchPostingLimit = 512;
         public const int DefaultQueueSizeLimit = 65536;
+        public const int AbsenceQueueSizeLimit = -1;
         public static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(1);
 
         readonly HttpClient _httpClient;

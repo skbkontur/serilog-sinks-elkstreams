@@ -26,6 +26,7 @@ namespace Serilog
     {
         /// <summary>
         /// Adds a sink that writes log events to the ElkStreams server.
+        /// Value -1 of parameter queueSizeLimit means that there is no queue size limit.
         /// </summary>
         /// <param name="loggerConfiguration">The logger configuration.</param>
         /// <param name="indexTemplate">The index name formatter. A string.Format using the DateTimeOffset of the event is run over this string.</param>
@@ -57,15 +58,23 @@ namespace Serilog
 
             var defaultedPeriod = period ?? ElkStreamsSink.DefaultPeriod;
 
-            var sink = new ElkStreamsSink(
-                serverUrl,
-                apiKey,
-                indexTemplate,
-                renderMessage,
-                batchPostingLimit,
-                defaultedPeriod,
-                queueSizeLimit
-            );
+            var sink = queueSizeLimit == ElkStreamsSink.AbsenceQueueSizeLimit
+                ? new ElkStreamsSink(
+                    serverUrl,
+                    apiKey,
+                    indexTemplate,
+                    renderMessage,
+                    batchPostingLimit,
+                    defaultedPeriod
+                ) : new ElkStreamsSink(
+                    serverUrl,
+                    apiKey,
+                    indexTemplate,
+                    renderMessage,
+                    batchPostingLimit,
+                    defaultedPeriod,
+                    queueSizeLimit
+                );
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
         }
     }
